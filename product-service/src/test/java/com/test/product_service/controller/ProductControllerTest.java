@@ -1,16 +1,16 @@
 package com.test.product_service.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.product_service.dto.request.ProductRequestDTO;
 import com.test.product_service.dto.response.ProductResponseDTO;
 import com.test.product_service.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private ProductService service;
 
     @Autowired
