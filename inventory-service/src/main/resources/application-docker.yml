@@ -16,3 +16,4 @@ spring:
 product:
   service:
     url: http://product-service:8080/products/
+    api-key: secret123

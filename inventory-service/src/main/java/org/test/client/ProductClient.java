@@ -3,13 +3,15 @@ package org.test.client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 import org.test.dto.request.ProductDTO;
 import org.test.dto.response.JsonApiResponse;
 import org.test.client.exception.ProductClientException;
@@ -25,15 +27,30 @@ public class ProductClient {
     @Value("${product.service.url}")
     private String productServiceUrl;
 
+    @Value("${product.service.api-key}")
+    private String apiKey;
+
+    @Retryable(
+            value = {
+                    ResourceAccessException.class,
+                    HttpServerErrorException.class
+            },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public ProductDTO getProduct(Long productId) {
 
         try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-API-KEY", apiKey);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<JsonApiResponse<ProductDTO>> response =
                     restTemplate.exchange(
                             productServiceUrl + productId,
                             HttpMethod.GET,
-                            null,
+                            entity,
                             new ParameterizedTypeReference<JsonApiResponse<ProductDTO>>() {}
                     );
             var body = response.getBody();
@@ -53,8 +70,12 @@ public class ProductClient {
             );
 
         } catch (ResourceAccessException ex) {
-            // timeout / conexión caída
             throw new ProductServiceUnavailableException();
         }
+    }
+
+    @Recover
+    public ProductDTO recover(Exception ex, Long productId) {
+        throw new ProductServiceUnavailableException();
     }
 }

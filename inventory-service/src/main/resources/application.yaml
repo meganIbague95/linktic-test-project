@@ -18,3 +18,4 @@ spring:
 product:
   service:
     url: http://localhost:8080/products/
+    api-key: secret123
