@@ -14,6 +14,8 @@ import org.test.model.Inventory;
 import org.test.repository.InventoryRepository;
 import org.test.util.Constants;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -80,5 +82,14 @@ public class InventoryService {
                 .quantityPurchased(quantity)
                 .remainingStock(inventory.getQuantity())
                 .build();
+    }
+
+    public List<InventoryResponseDTO> getAllInventory() {
+        return repository.findAll().stream()
+                .map(inv -> {
+                    ProductDTO product = productClient.getProduct(inv.getProductId());
+                    return new InventoryResponseDTO(product, inv.getQuantity());
+                })
+                .toList();
     }
 }
