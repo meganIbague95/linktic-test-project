@@ -1,6 +1,7 @@
 package org.test.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -20,6 +21,7 @@ import org.test.client.exception.ProductServiceUnavailableException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ProductClient {
 
     private final RestTemplate restTemplate;
@@ -55,15 +57,17 @@ public class ProductClient {
                     );
             var body = response.getBody();
             if (body == null || body.getData() == null) {
-                throw new ProductServiceUnavailableException();
+                throw new ProductNotFoundException(productId);
             }
 
             return body.getData().getAttributes();
 
         } catch (HttpClientErrorException.NotFound ex) {
+            log.error("Inventory not found");
             throw new ProductNotFoundException(productId);
 
         } catch (HttpStatusCodeException ex) {
+            log.error("Error calling product-service: {}", ex.getStatusCode());
             throw new ProductClientException(
                     "Error calling product-service: " + ex.getStatusCode(),
                     ex.getStatusCode().value()

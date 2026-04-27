@@ -10,6 +10,8 @@ import org.test.dto.response.InventoryResponseDTO;
 import org.test.dto.response.PurchaseResponseDTO;
 import org.test.service.InventoryService;
 
+import java.util.List;
+
 @Tag(name = "Inventory", description = "Inventory management APIs")
 @RestController
 @RequestMapping("/inventory")
@@ -34,5 +36,10 @@ public class InventoryController {
     @PostMapping("/purchase")
     public PurchaseResponseDTO purchase(@RequestBody PurchaseRequestDTO dto) {
         return service.purchase(dto.getProductId(), dto.getQuantity());
+    }
+
+    @GetMapping
+    public List<InventoryResponseDTO> getAll() {
+        return service.getAllInventory();
     }
 }
