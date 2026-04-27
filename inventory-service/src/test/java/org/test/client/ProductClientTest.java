@@ -1,6 +1,7 @@
 package org.test.client;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import org.test.dto.response.JsonApiResponse;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-
 class ProductClientTest {
 
     @Test
@@ -64,7 +64,7 @@ class ProductClientTest {
                 any(ParameterizedTypeReference.class)
         )).thenReturn(ResponseEntity.ok(null));
 
-        assertThrows(ProductServiceUnavailableException.class,
+        assertThrows(ProductNotFoundException.class,
                 () -> client.getProduct(1L));
     }
 
@@ -82,7 +82,7 @@ class ProductClientTest {
                 any(ParameterizedTypeReference.class)
         )).thenReturn(ResponseEntity.ok(response));
 
-        assertThrows(ProductServiceUnavailableException.class,
+        assertThrows(ProductNotFoundException.class,
                 () -> client.getProduct(1L));
     }
 
