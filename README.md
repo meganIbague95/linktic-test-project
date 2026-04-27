@@ -92,6 +92,13 @@ Frontend (Quasar)
 ---
 
 ##  Ejecutar todo con Docker
+Antes correr el comando:
+mvn clean install
+Dentro de la carpeta product-service y inventory-service
+
+Ejecutar el comando
+npm install
+dentro del proyecto quasar-project
 
 Desde la raíz del proyecto:
 

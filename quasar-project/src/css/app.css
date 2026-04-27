@@ -1,0 +1,12 @@
+body {
+  background: #f5f7fb;
+}
+
+.q-card {
+  border-radius: 12px;
+}
+
+.page-container {
+  max-width: 900px;
+  margin: auto;
+}
