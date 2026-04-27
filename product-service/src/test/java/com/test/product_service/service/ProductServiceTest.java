@@ -8,6 +8,7 @@ import com.test.product_service.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
     private ProductRepository repository;
+    private RabbitTemplate rabbitTemplate;
     private ProductService service;
 
     @BeforeEach
     void setUp() {
         repository = Mockito.mock(ProductRepository.class);
-        service = new ProductService(repository);
+        rabbitTemplate = Mockito.mock(RabbitTemplate.class);
+        service = new ProductService(repository,rabbitTemplate);
     }
 
     @Test
