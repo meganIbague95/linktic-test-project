@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -48,6 +46,14 @@ services:
       SPRING_RABBITMQ_PORT: 5672
     ports:
         - "8081:8081"
+  frontend:
+    build: ./quasar-project
+    container_name: frontend
+    ports:
+      - "9000:80"
+    depends_on:
+      - product-service
+      - inventory-service
     
   rabbitmq:
     image: rabbitmq:3-management
